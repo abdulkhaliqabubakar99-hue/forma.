@@ -12,21 +12,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="icon" type="image/x-icon" href="logo.png">
     <style>
       :root {
-        --ink: #171614;
-        --muted: #716d68;
-        --paper: #fffdf9;
-        --line: #e9e3dc;
-        --green: #d9662b;
-        --green-dark: #b84b1d;
-        --gold: #ef8a4b;
-        --surface: #f4f0ec;
-        --serif: Georgia, "Times New Roman", serif;
+        --ink: #17241f;
+        --muted: #69756e;
+        --paper: #f8f7f2;
+        --line: #e3e5dc;
+        --green: #285447;
+        --green-dark: #173c32;
+        --gold: #b49a67;
+        --surface: #eef0e9;
+        --serif: "Cormorant Garamond", Georgia, serif;
         --sans: "DM Sans", sans-serif;
         --head: "Manrope", sans-serif;
         --radius-sm: 10px;
@@ -822,6 +822,376 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         gap: 13px;
+      }
+      .feature-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+        margin-bottom: 10px;
+      }
+      .feature-chip {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        border: 1px solid rgba(23, 36, 31, 0.08);
+        border-radius: 18px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(242, 236, 224, 0.8));
+        padding: 18px 18px 16px;
+      }
+      .feature-chip span {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        background: rgba(40, 84, 71, 0.08);
+      }
+      .feature-chip strong {
+        display: block;
+        font: 600 13px var(--head);
+        letter-spacing: 0.03em;
+      }
+      .feature-chip small {
+        color: var(--muted);
+      }
+      .bundle-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .bundle-card {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 18px 18px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .bundle-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .bundle-tag {
+        display: inline-flex;
+        align-items: center;
+        background: rgba(40, 84, 71, 0.08);
+        color: var(--green-dark);
+        border-radius: 999px;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        padding: 7px 9px;
+        font-weight: 700;
+      }
+      .bundle-save {
+        font-size: 10px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--green);
+        font-weight: 700;
+      }
+      .bundle-card h3 {
+        margin: 0;
+        font: 600 22px/1.2 var(--head);
+        letter-spacing: -0.04em;
+      }
+      .bundle-card p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .bundle-visual {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+      }
+      .bundle-visual img {
+        width: 74px;
+        height: 74px;
+        object-fit: contain;
+        background: var(--surface);
+        border-radius: 14px;
+        border: 1px solid rgba(22, 18, 14, 0.04);
+      }
+      .bundle-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+        gap: 12px;
+      }
+      .bundle-footer strong {
+        display: block;
+        font-size: 18px;
+        letter-spacing: -0.05em;
+      }
+      .bundle-footer small {
+        display: block;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .bundle-button {
+        padding: 11px 14px;
+        min-width: 120px;
+      }
+      .drop-shell {
+        display: grid;
+        grid-template-columns: 1.15fr 1fr;
+        gap: 20px;
+        background: linear-gradient(135deg, rgba(23, 29, 26, 0.96), rgba(40, 84, 71, 0.9));
+        border-radius: 28px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #f7f5f1;
+      }
+      .drop-story {
+        padding: 28px 28px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 16px;
+      }
+      .drop-story .eyebrow {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .drop-story h2 {
+        margin: 0;
+        font: 500 clamp(30px, 4vw, 46px)/1 var(--serif);
+        letter-spacing: -0.06em;
+      }
+      .drop-story p {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.8);
+      }
+      .drop-ticker {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .drop-pill {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 10px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .drop-timer {
+        display: inline-flex;
+        gap: 8px;
+        margin-top: 2px;
+      }
+      .drop-timer span {
+        min-width: 52px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 10px 8px;
+        text-align: center;
+      }
+      .drop-timer em {
+        display: block;
+        font-size: 9px;
+        opacity: 0.65;
+        font-style: normal;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .drop-count {
+        font-size: 20px;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+      }
+      .drop-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 18px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .drop-preview .drop-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .drop-page-heading {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 24px;
+      }
+      .drop-page-heading h1 {
+        margin: 8px 0 0;
+        font: 500 42px/1.05 var(--serif);
+        color: var(--ink);
+      }
+      .drop-page-heading p {
+        max-width: 560px;
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .drop-promo {
+        margin: 0 0 32px;
+      }
+      .drop-promo-photo {
+        min-height: 300px;
+        background: var(--surface);
+      }
+      .drop-promo-photo img {
+        object-fit: contain;
+        padding: 24px;
+      }
+      .drop-promo-copy .drop-timer {
+        align-self: flex-start;
+        margin: 0 0 22px;
+      }
+      .drop-promo-copy .button {
+        align-self: flex-start;
+      }
+      .drop-page-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+        padding: 0;
+        background: transparent;
+      }
+      .drop-page-grid .drop-card {
+        min-width: 0;
+        padding: 14px;
+        color: var(--ink);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 10px 28px rgba(23, 36, 31, 0.06);
+      }
+      .drop-page-grid .drop-card img {
+        height: 190px;
+        background: var(--surface);
+        border-radius: 6px;
+      }
+      .drop-page-grid .drop-card small {
+        color: var(--muted);
+      }
+      .drop-page-grid .drop-card-tag {
+        border: 1px solid var(--line);
+      }
+      .drop-preview .drop-card-tag {
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+      }
+      @media (max-width: 900px) {
+        .drop-page-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      @media (max-width: 520px) {
+        .drop-promo {
+          grid-template-columns: 1fr;
+        }
+        .drop-promo-photo {
+          min-height: 240px;
+          max-height: 300px;
+        }
+        .drop-page-heading {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 16px;
+        }
+        .drop-page-heading h1 {
+          font-size: 34px;
+        }
+      }
+      .drop-preview {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+      .drop-preview-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 20px 24px 8px;
+      }
+      .drop-preview-bar .eyebrow {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .drop-countdown-line {
+        display: flex;
+        align-items: baseline;
+        gap: 7px;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      .drop-countdown-line span {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 2px;
+      }
+      .drop-countdown-line b {
+        font-size: 15px;
+      }
+      .drop-countdown-line em,
+      .drop-countdown-line i {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 11px;
+        font-style: normal;
+      }
+      @media (max-width: 520px) {
+        .drop-preview-bar {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 8px;
+          padding: 18px 18px 8px;
+        }
+      }
+      @media (max-width: 520px) {
+        .drop-preview .drop-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .drop-card {
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .drop-card img {
+        width: 100%;
+        height: 132px;
+        object-fit: contain;
+        background: rgba(255, 255, 255, 0.04);
+        border-radius: 12px;
+      }
+      .drop-card b {
+        display: block;
+        font: 600 15px var(--head);
+      }
+      .drop-card small {
+        color: rgba(255, 255, 255, 0.74);
+        line-height: 1.5;
+      }
+      .drop-card .bundle-footer {
+        margin-top: auto;
+      }
+      .drop-card .bundle-footer strong {
+        font-size: 16px;
+      }
+      .drop-card .bundle-button {
+        min-width: 90px;
+        padding-block: 10px;
       }
       .category-tile {
         height: 305px;
@@ -4021,6 +4391,214 @@
       body:has(.nav-item.open) .mega {
         display: none;
       }
+      :root {
+        --ink: #17241f;
+        --muted: #68756e;
+        --paper: #f8f7f2;
+        --line: #e1e4dc;
+        --green: #2a5949;
+        --green-dark: #173c32;
+        --gold: #b99c68;
+        --surface: #eef0e9;
+        --serif: "Cormorant Garamond", Georgia, serif;
+      }
+      body {
+        background: linear-gradient(180deg, #fbfaf6 0%, #f5f5ef 42%, #fbfaf6 100%);
+        color: var(--ink);
+      }
+      .announcement {
+        background: linear-gradient(100deg, #102d26, #1d493c 52%, #102d26);
+        color: #f8f5eb;
+      }
+      .trust-bar {
+        background: linear-gradient(100deg, #b99c68, #d0bd91 48%, #b99c68);
+        color: #17241f;
+        border-bottom: 1px solid rgba(23, 60, 50, 0.16);
+      }
+      .header {
+        background: rgba(248, 247, 242, 0.94);
+        border-bottom-color: rgba(23, 60, 50, 0.1);
+        backdrop-filter: blur(18px);
+      }
+      .brand span,
+      .nav a:hover,
+      .nav a.active,
+      .nav-trigger:hover,
+      .nav-item:hover > .nav-trigger,
+      .nav-item.open > a,
+      .nav-item.open > .nav-trigger,
+      .nav-item:hover .nav-drop-title {
+        color: var(--gold);
+      }
+      .hero {
+        max-width: none;
+        padding: 0 0 26px;
+      }
+      .hero-art {
+        height: auto;
+        min-height: 0;
+        aspect-ratio: 12 / 5;
+        border-radius: 0;
+        background: #e8e8df;
+        animation: heroReveal 0.9s cubic-bezier(0.2, 0.75, 0.2, 1) both;
+      }
+      .hero-art > img {
+        border-radius: 0;
+        object-position: center;
+      }
+      .section {
+        padding-top: 68px;
+        padding-bottom: 68px;
+      }
+      .eyebrow {
+        color: #8d7447;
+        letter-spacing: 0.17em;
+      }
+      .section-title {
+        font-family: var(--serif);
+        font-size: 42px;
+        font-weight: 600;
+        line-height: 1;
+        color: var(--green-dark);
+      }
+      .text-link,
+      .rail-page-cta {
+        color: var(--green-dark);
+      }
+      .button {
+        background: linear-gradient(115deg, #285747, #173c32 78%);
+        border-color: #173c32;
+        box-shadow: 0 10px 24px rgba(23, 60, 50, 0.17);
+      }
+      .button:hover {
+        background: linear-gradient(115deg, #376c59, #214b3f 78%);
+        border-color: #214b3f;
+        box-shadow: 0 14px 28px rgba(23, 60, 50, 0.23);
+      }
+      .product-image,
+      .detail-image,
+      .thumbs button {
+        background: linear-gradient(145deg, #eeefe8, #f8f8f3 72%);
+      }
+      .product-card {
+        border-radius: 5px;
+        animation: cardRise 0.6s cubic-bezier(0.2, 0.75, 0.2, 1) both;
+      }
+      .product-card:nth-child(4n + 2) { animation-delay: 0.06s; }
+      .product-card:nth-child(4n + 3) { animation-delay: 0.12s; }
+      .product-card:nth-child(4n + 4) { animation-delay: 0.18s; }
+      .product-card:hover {
+        transform: translateY(-5px);
+      }
+      .product-badge {
+        color: #755e35;
+        background: rgba(248, 247, 242, 0.94);
+        border-color: rgba(185, 156, 104, 0.48);
+      }
+      .category-tile {
+        border-radius: 5px;
+        box-shadow: 0 14px 32px rgba(23, 36, 31, 0.08);
+      }
+      .category-tile::after {
+        background: linear-gradient(180deg, transparent 38%, rgba(12, 31, 25, 0.72));
+      }
+      .stats-strip {
+        background: linear-gradient(110deg, #173c32, #285747 54%, #173c32);
+        border-block: 1px solid rgba(185, 156, 104, 0.56);
+      }
+      .reviews {
+        background: linear-gradient(135deg, #eff1e9, #f7f5ed 52%, #e8eee8);
+      }
+      .review-card {
+        border-radius: 5px;
+        border-color: rgba(23, 60, 50, 0.12);
+        box-shadow: 0 16px 38px rgba(23, 36, 31, 0.06);
+      }
+      .review-stars,
+      .verified {
+        color: #8d7447;
+      }
+      .promo {
+        border-radius: 6px;
+        overflow: hidden;
+        background: linear-gradient(120deg, #173c32, #285747 72%, #355f4f);
+        box-shadow: 0 22px 50px rgba(23, 36, 31, 0.14);
+      }
+      .promo-copy {
+        color: #f8f7f2;
+      }
+      .promo-copy .eyebrow,
+      .promo-copy p {
+        color: rgba(248, 247, 242, 0.76);
+      }
+      .promo-copy h2 {
+        font-family: var(--serif);
+        font-weight: 600;
+      }
+      .newsletter {
+        background: linear-gradient(115deg, #e9ece3, #f4f1e7 52%, #e5ebe4);
+      }
+      .footer {
+        background: linear-gradient(125deg, #102d26, #173c32 55%, #102d26);
+      }
+      .footer::before {
+        background: linear-gradient(90deg, transparent, #b99c68 22%, #dfcfaa 50%, #b99c68 78%, transparent);
+        opacity: 0.85;
+      }
+      .mega {
+        background: rgba(248, 247, 242, 0.98);
+        border-color: rgba(23, 60, 50, 0.12);
+      }
+      .nav-drop {
+        background: rgba(248, 247, 242, 0.98);
+        border-color: rgba(23, 60, 50, 0.12);
+      }
+      .nav-drop-title,
+      .mega-col-title,
+      .mega-badge {
+        color: #80683e;
+      }
+      .nav-tile:hover,
+      .mega-link:hover {
+        background: rgba(42, 89, 73, 0.08);
+      }
+      .bag-count {
+        background: #a8844d;
+      }
+      :focus-visible {
+        outline-color: #a8844d;
+      }
+      @keyframes heroReveal {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes cardRise {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @media (max-width: 700px) {
+        .hero-art {
+          height: min(72vw, 340px);
+          min-height: 240px;
+          aspect-ratio: auto;
+        }
+        .hero-art > img {
+          object-position: left center;
+        }
+        .section {
+          padding-top: 48px;
+          padding-bottom: 48px;
+        }
+        .section-title {
+          font-size: 34px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero-art,
+        .product-card {
+          animation: none;
+        }
+      }
     </style>
   </head>
   <body>
@@ -4037,10 +4615,8 @@
       >
       <nav class="nav" id="main-nav" aria-label="Main navigation">
         <a href="#home" data-route="home">Home</a>
-        <span class="nav-item">
-          <a href="#shop" data-route="shop">All products</a>
-          <span class="nav-drop nav-drop-rich" id="nav-drop-categories"></span>
-        </span>
+        <a href="#shop" data-route="shop">All products</a>
+        <a href="#fresh-drop" data-route="fresh-drop">Fresh drop</a>
         <span class="nav-item">
           <a href="#shop" data-drop-trigger>Collections</a>
           <span class="nav-drop nav-drop-rich" id="nav-drop-collections"></span>
@@ -4088,11 +4664,61 @@
         <div class="hero">
           <div class="hero-art">
             <img
-              src="images/oraimo-gh-occassion-baby-care-pc.webp"
-              alt="Kitchen and cooking essentials arranged in a calm, sunlit home interior"
+              src="images/oraimo-gh-occassion-home-cleaning-pc.webp"
+              alt="Home cleaning essentials arranged in a calm, sunlit living room"
             />
           </div>
         </div>
+        <section class="section" style="padding-top: 22px; padding-bottom: 20px">
+          <div class="feature-strip">
+            <div class="feature-chip">
+              <span>🚚</span>
+              <div>
+                <strong>Free shipping over $100</strong>
+                <small>Fast, tracked delivery</small>
+              </div>
+            </div>
+            <div class="feature-chip">
+              <span>✓</span>
+              <div>
+                <strong>30-day easy returns</strong>
+                <small>Stress-free shopping</small>
+              </div>
+            </div>
+            <div class="feature-chip">
+              <span>✦</span>
+              <div>
+                <strong>AI-powered shopping</strong>
+                <small>Personalized recommendations</small>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section class="section" style="padding-top: 8px; padding-bottom: 10px">
+          <div class="section-top">
+            <div>
+              <div class="eyebrow">Built around your routine</div>
+              <h2 class="section-title">Smart bundles you’ll actually use</h2>
+            </div>
+            <a class="text-link" href="#shop">Build my edit →</a>
+          </div>
+          <div class="bundle-grid" id="bundle-grid"></div>
+        </section>
+        <section class="section" style="padding-top: 10px; padding-bottom: 16px">
+          <div class="drop-shell drop-preview">
+            <div class="drop-preview-bar">
+              <div class="eyebrow">Fresh drop</div>
+              <div class="drop-countdown-line" aria-label="Fresh drop time remaining" aria-live="polite">
+                <span><b class="drop-hours">09</b><em>h</em></span>
+                <i>:</i>
+                <span><b class="drop-minutes">26</b><em>m</em></span>
+                <i>:</i>
+                <span><b class="drop-seconds">14</b><em>s</em></span>
+              </div>
+            </div>
+            <div class="drop-grid" id="home-drop-grid" data-limit="3"></div>
+          </div>
+        </section>
         <section class="section" style="padding-top: 30px">
           <div class="section-top">
             <div>
@@ -4204,6 +4830,27 @@
             <button class="faq-q" type="button">Can I change or cancel my order?<span>+</span></button>
             <div class="faq-a"><p>Yes — as long as it hasn't shipped. Message us within a few hours of ordering and we'll update or cancel it free of charge.</p></div>
           </div>
+        </section>
+      </section>
+      <section class="page" id="fresh-drop-page">
+        <section class="section" style="padding-top: 38px; padding-bottom: 56px">
+          <div class="promo drop-promo">
+            <div class="promo-photo drop-promo-photo">
+              <img id="fresh-drop-hero-image" src="" alt="Fresh Drop featured product" onerror="this.onerror=null;this.src='images/oraimo-gh-occassion-home-cleaning-pc.webp'">
+            </div>
+            <div class="promo-copy drop-promo-copy">
+              <div class="eyebrow">Fresh drop</div>
+              <h2>Limited-run essentials for the week ahead.</h2>
+              <p>Hand-picked favourites, restocked before they sell out. The best pieces drop fast, and this edit is designed to move quickly.</p>
+              <div class="drop-timer" aria-live="polite" aria-label="Fresh drop time remaining">
+                <span><em>Hours</em><b class="drop-count drop-hours">09</b></span>
+                <span><em>Min</em><b class="drop-count drop-minutes">26</b></span>
+                <span><em>Sec</em><b class="drop-count drop-seconds">14</b></span>
+              </div>
+              <a class="button" href="#shop">Shop the edit →</a>
+            </div>
+          </div>
+          <div class="drop-grid drop-page-grid" id="drop-grid"></div>
         </section>
       </section>
       <section class="page" id="shop-page">
@@ -5306,20 +5953,6 @@
         };
         const railItem = (label, sub, href, pageKey, items) =>
           `<a class="rail-item" data-target="${pageKey}" href="${href}"><b>${escapeHTML(label)}</b><small>${escapeHTML(sub)}</small><span class="rail-arrow">→</span></a>`;
-        /* Categories rail */
-        const catDefs = [
-          ["Technology", "Devices & audio", "#category/tech", (p) => p.category === "Tech"],
-          ["Clothing", "Everyday layers", "#category/clothing", (p) => p.category === "Clothing"],
-          ["Home & living", "Personal care", "#category/home", (p) => p.category === "Home"],
-          ["Accessories", "Bags & extras", "#category/accessories", (p) => p.category === "Accessories"],
-          ["Best sellers", "Popular right now", "#tag/Best%20seller", (p) => p.tag === "Best seller"],
-          ["New arrivals", "Fresh in this week", "#tag/New%20arrival", (p) => p.tag === "New arrival"],
-        ];
-        const catPages = catDefs.map(([label, sub, href, pred]) => railPage(label, sub, href, products.filter(pred))).join("");
-        const catItems = catDefs.map(([label, sub, href, pred]) => railItem(label, sub, href, label.replace(/\W+/g, "-").toLowerCase(), products.filter(pred))).join("")
-          + `<a class="rail-item rail-item-all" href="#shop"><b>All products</b><small>${products.length} items</small><span class="rail-arrow">→</span></a>`;
-        document.getElementById("nav-drop-categories").innerHTML =
-          `<div class="rail"><div class="rail-list">${catItems}</div>${catPages}</div>`;
         /* Collections rail */
         const collDefs = [
           ["Travel favourites", "Made to move", "#tag/Travel%20favourite", (p) => p.tag === "Travel favourite"],
@@ -5465,6 +6098,139 @@
               (el.onclick = () =>
                 go("#category/" + el.dataset.categoryTile.toLowerCase())),
           );
+      }
+      function renderBundleCards() {
+        const target = document.getElementById("bundle-grid");
+        if (!target || !products || !products.length) return;
+        const bundles = [
+          {
+            title: "Desk reset",
+            subtitle: "Charge, focus, and tidy your everyday setup.",
+            items: [3, 7, 11],
+          },
+          {
+            title: "Travel light",
+            subtitle: "A compact kit for commuting and quick escapes.",
+            items: [10, 12, 17],
+          },
+          {
+            title: "Home essentials",
+            subtitle: "Small upgrades that make everyday life smoother.",
+            items: [5, 8, 14],
+          },
+        ];
+        target.innerHTML = bundles
+          .map(({ title, subtitle, items }) => {
+            const bundleProducts = items
+              .map((id) => products.find((product) => product.id === id))
+              .filter(Boolean);
+            const total = bundleProducts.reduce((sum, product) => sum + product.price, 0);
+            return `
+              <article class="bundle-card">
+                <div class="bundle-top">
+                  <span class="bundle-tag">Bundle</span>
+                  <span class="bundle-save">Save ${currency(total * 0.12)}</span>
+                </div>
+                <h3>${title}</h3>
+                <p>${subtitle}</p>
+                <div class="bundle-visual">
+                  ${bundleProducts
+                    .map(
+                      (product) =>
+                        `<img src="${imageAt(product, 0)}" alt="${product.name}" onerror="this.onerror=null;this.src='${fallbackImage()}'">`,
+                    )
+                    .join("")}
+                </div>
+                <div class="bundle-footer">
+                  <div>
+                    <strong>${currency(total)}</strong>
+                    <small>${bundleProducts.length} pieces</small>
+                  </div>
+                  <button class="button bundle-button" type="button" data-bundle-add="${items.join(",")}">Add bundle</button>
+                </div>
+              </article>
+            `;
+          })
+          .join("");
+        target.querySelectorAll("[data-bundle-add]").forEach((button) => {
+          button.onclick = () => {
+            const ids = (button.dataset.bundleAdd || "")
+              .split(",")
+              .map(Number)
+              .filter(Boolean);
+            ids.forEach((id) => {
+              const product = products.find((item) => item.id === id);
+              if (product) addToCart(product, "", product.colors ? product.colors[0] : "", 1);
+            });
+            toast("Bundle added to your bag");
+          };
+        });
+      }
+      function renderLimitedDrop() {
+        const dropGrids = [
+          document.getElementById("drop-grid"),
+          document.getElementById("home-drop-grid"),
+        ].filter(Boolean);
+        if (!dropGrids.length || !products || !products.length) return;
+        const featured = [3, 7, 10, 17].map((id) => products.find((product) => product.id === id)).filter(Boolean).slice(0, 4);
+        const heroImage = document.getElementById("fresh-drop-hero-image");
+        if (heroImage && featured[0]) {
+          heroImage.src = imageAt(featured[0], 0);
+          heroImage.alt = featured[0].name;
+        }
+        dropGrids.forEach((dropGrid) => {
+          const limit = Number(dropGrid.dataset.limit) || featured.length;
+          dropGrid.innerHTML = featured.slice(0, limit)
+            .map(
+              (product) => `
+              <article class="drop-card">
+                <img src="${imageAt(product, 0)}" alt="${product.name}" onerror="this.onerror=null;this.src='${fallbackImage()}'">
+                <div>
+                  <span class="bundle-tag drop-card-tag">${product.tag}</span>
+                </div>
+                <b>${product.name}</b>
+                <small>${product.description}</small>
+                <div class="bundle-footer">
+                  <div>
+                    <strong>${currency(product.price)}</strong>
+                    <small>Limited stock</small>
+                  </div>
+                  <button class="button bundle-button" type="button" data-drop-add="${product.id}">Add</button>
+                </div>
+              </article>
+            `,
+            )
+            .join("");
+          dropGrid.querySelectorAll("[data-drop-add]").forEach((button) => {
+            button.onclick = () => {
+              const product = products.find((item) => item.id === Number(button.dataset.dropAdd));
+              if (!product) return;
+              addToCart(product, "", product.colors ? product.colors[0] : "", 1);
+              toast("Added to your bag");
+            };
+          });
+        });
+      }
+      function startDropCountdown() {
+        const hoursEls = document.querySelectorAll(".drop-hours");
+        const minutesEls = document.querySelectorAll(".drop-minutes");
+        const secondsEls = document.querySelectorAll(".drop-seconds");
+        if (!hoursEls.length || !minutesEls.length || !secondsEls.length) return;
+        const end = Date.now() + 9 * 60 * 60 * 1000 + 26 * 60 * 1000 + 14 * 1000;
+        const update = () => {
+          const remaining = Math.max(0, end - Date.now());
+          const hours = Math.floor(remaining / 3600000);
+          const minutes = Math.floor((remaining % 3600000) / 60000);
+          const seconds = Math.floor((remaining % 60000) / 1000);
+          hoursEls.forEach((element) => (element.textContent = String(hours).padStart(2, "0")));
+          minutesEls.forEach((element) => (element.textContent = String(minutes).padStart(2, "0")));
+          secondsEls.forEach((element) => (element.textContent = String(seconds).padStart(2, "0")));
+          if (remaining === 0) {
+            clearInterval(timer);
+          }
+        };
+        update();
+        const timer = setInterval(update, 1000);
       }
       let currentTagFilter = null, currentPriceFilter = null, currentSortOverride = null;
       function matchesPriceFilter(p, filter) {
@@ -6187,6 +6953,7 @@
       function route() {
         const hash = location.hash || "#home",
           home = document.getElementById("home-page"),
+          freshDrop = document.getElementById("fresh-drop-page"),
           shop = document.getElementById("shop-page"),
           detail = document.getElementById("detail-page"),
           about = document.getElementById("about-page"),
@@ -6205,6 +6972,10 @@
           home.classList.add("active");
           const hlink = document.querySelector('[data-route="home"]');
           if (hlink) hlink.classList.add("active");
+        } else if (hash === "#fresh-drop") {
+          freshDrop.classList.add("active");
+          const dropLink = document.querySelector('[data-route="fresh-drop"]');
+          if (dropLink) dropLink.classList.add("active");
         } else if (hash === "#shop" || hash.startsWith("#category/") || hash.startsWith("#tag/") || hash.startsWith("#price/") || hash.startsWith("#sort/")) {
           shop.classList.add("active");
           currentTagFilter = null;
@@ -6280,6 +7051,9 @@
         window.scrollTo(0, 0);
       }
       renderCategories();
+      renderBundleCards();
+      renderLimitedDrop();
+      startDropCountdown();
       buildMegaMenu();
       document.getElementById("featured-grid").innerHTML = products
         .filter((p) => [3, 5, 9, 17].includes(p.id))
@@ -6305,61 +7079,84 @@
         const mega = document.getElementById("mega-menu");
         mega.hidden ? openMega() : closeMega();
       };
-      document.getElementById("menu-toggle").onmouseenter = () => {
+      document.getElementById("menu-toggle").onpointerenter = () => {
         const mega = document.getElementById("mega-menu");
         if (mega.hidden) openMega();
       };
-      document.querySelector('.nav-item:has(#menu-toggle)').onmouseleave = () => {
+      document.querySelector('.nav-item:has(#menu-toggle)').onpointerleave = () => {
         setTimeout(() => {
           const mega = document.getElementById("mega-menu");
           const t = document.getElementById("menu-toggle");
-          if (mega && !mega.hidden && !mega.matches(":hover") && !t.matches(":hover")) closeMega();
+          const item = document.querySelector('.nav-item:has(#menu-toggle)');
+          if (mega && !mega.hidden && !mega.matches(":hover") && !t.matches(":hover") && !item.matches(":hover")) closeMega();
         }, 220);
       };
-      document.getElementById("mega-menu").onmouseleave = () => {
+      document.getElementById("mega-menu").onpointerleave = () => {
         setTimeout(() => {
           const mega = document.getElementById("mega-menu");
           const t = document.getElementById("menu-toggle");
-          if (mega && !mega.hidden && !mega.matches(":hover") && !t.matches(":hover")) closeMega();
+          const item = document.querySelector('.nav-item:has(#menu-toggle)');
+          if (mega && !mega.hidden && !mega.matches(":hover") && !t.matches(":hover") && !item.matches(":hover")) closeMega();
         }, 220);
       };
       document.getElementById("mega-close").onclick = closeMega;
+
+      function closeNavItem(item, trigger) {
+        if (!item || !item.classList.contains("open")) return;
+        const drop = item.querySelector(".nav-drop");
+        const pointerInside = item.matches(":hover") || (drop && drop.matches(":hover"));
+        if (!pointerInside) {
+          item.classList.remove("open");
+          if (trigger) trigger.setAttribute("aria-expanded", "false");
+        }
+      }
+
+      function closeOtherNavItems(currentItem) {
+        document.querySelectorAll(".nav-item.open").forEach((openItem) => {
+          if (openItem !== currentItem) {
+            openItem.classList.remove("open");
+            const link = openItem.querySelector("[data-drop-trigger]");
+            if (link) link.setAttribute("aria-expanded", "false");
+          }
+        });
+      }
+
+      const nav = document.getElementById("main-nav");
+      if (nav) {
+        nav.addEventListener("pointerleave", () => {
+          setTimeout(() => {
+            if (!nav.matches(":hover")) {
+              document.querySelectorAll(".nav-item.open").forEach((openItem) => {
+                openItem.classList.remove("open");
+                const link = openItem.querySelector("[data-drop-trigger]");
+                if (link) link.setAttribute("aria-expanded", "false");
+              });
+            }
+          }, 180);
+        });
+      }
+
       document.querySelectorAll("[data-drop-trigger]").forEach((trigger) => {
         trigger.setAttribute("aria-expanded", "false");
+        const item = trigger.closest(".nav-item");
+        const drop = item?.querySelector(".nav-drop");
         const closeCheck = () => {
           setTimeout(() => {
-            const item = trigger.closest(".nav-item");
-            if (item && item.classList.contains("open") &&
-                !item.matches(":hover") && !trigger.matches(":hover")) {
-              item.classList.remove("open");
-              trigger.setAttribute("aria-expanded", "false");
-            }
+            closeNavItem(item, trigger);
           }, 220);
         };
-        trigger.onmouseenter = () => {
-          const item = trigger.closest(".nav-item");
-          document.querySelectorAll(".nav-item.open").forEach((open) => {
-            if (open !== item) {
-              open.classList.remove("open");
-              const link = open.querySelector("[data-drop-trigger]");
-              if (link) link.setAttribute("aria-expanded", "false");
-            }
-          });
+        trigger.onpointerenter = () => {
+          closeOtherNavItems(item);
           item.classList.add("open");
           trigger.setAttribute("aria-expanded", "true");
         };
-        const drop = trigger.closest(".nav-item")?.querySelector(".nav-drop");
-        if (drop) drop.onmouseleave = closeCheck;
-        trigger.onmouseleave = closeCheck;
+        if (drop) drop.onpointerleave = closeCheck;
+        trigger.onpointerleave = closeCheck;
         trigger.onclick = (event) => {
           event.preventDefault();
           const item = trigger.closest(".nav-item");
           const isOpen = item.classList.contains("open");
-          document.querySelectorAll(".nav-item.open").forEach((open) => {
-            open.classList.remove("open");
-            const link = open.querySelector("[data-drop-trigger]");
-            if (link) link.setAttribute("aria-expanded", "false");
-          });
+          closeOtherNavItems(item);
           if (!isOpen) {
             item.classList.add("open");
             trigger.setAttribute("aria-expanded", "true");
