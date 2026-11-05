@@ -18,16 +18,15 @@
     <link rel="icon" type="image/x-icon" href="logo.png">
     <style>
       :root {
-        --ink: #171614;
-        --muted: #716d68;
-        --paper: #fffdf9;
-        --line: #e9e3dc;
-        --green: #d9662b;
-        --green-dark: #b84b1d;
-        --gold: #f2b25c;
-        --ink-soft: rgba(23, 22, 20, 0.62);
-        --surface: #f4f0ec;
-        --serif: Georgia, "Times New Roman", serif;
+        --ink: #17241f;
+        --muted: #69756e;
+        --paper: #f8f7f2;
+        --line: #e3e5dc;
+        --green: #285447;
+        --green-dark: #173c32;
+        --gold: #b49a67;
+        --surface: #eef0e9;
+        --serif: "Cormorant Garamond", Georgia, serif;
         --sans: "DM Sans", sans-serif;
         --head: "Manrope", sans-serif;
         --radius-sm: 10px;
@@ -94,7 +93,7 @@
         }
         to {
           stroke-dashoffset: 0;
-      }
+        }
       }
       @keyframes barGrow {
         from {
@@ -225,71 +224,100 @@
         padding: 34px 5.5% 80px;
       }
       .checkout-progress {
-        display: flex;
-        max-width: 460px;
-        margin: 0 auto 34px;
-      }
-      .checkout-progress span {
-        flex: 1;
-        text-align: center;
-        font-size: 10.5px;
-        font-weight: 700;
-        letter-spacing: 0.1em;
-        color: var(--muted);
+        --step-line-fill: 0%;
         position: relative;
-        padding-top: 30px;
+        isolation: isolate;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        max-width: 540px;
+        margin: 0 auto 34px;
+        padding: 0;
       }
-      .checkout-progress span::before {
-        content: "";
-        position: absolute;
-        top: 9px;
-        left: 50%;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        transform: translateX(-50%);
-        background: var(--surface);
-        border: 2px solid var(--line);
-        transition: background 0.3s, border-color 0.3s;
-      }
-      .checkout-progress span::after {
+      .checkout-progress::before,
+      .checkout-progress::after {
         content: "";
         position: absolute;
         top: 14px;
-        left: 0;
-        width: 50%;
+        left: 16.6667%;
         height: 2px;
+        z-index: 0;
+        border-radius: 99px;
+      }
+      .checkout-progress::before {
+        right: 16.6667%;
         background: var(--line);
-        transition: background 0.4s;
       }
-      .checkout-progress span:first-child::after {
-        display: none;
+      .checkout-progress::after {
+        width: var(--step-line-fill);
+        background: linear-gradient(90deg, var(--gold), var(--green));
+        transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
       }
-      .checkout-progress span:last-child::after {
+      .checkout-progress button {
+        min-width: 0;
+        border: 0;
+        padding: 39px 4px 0;
+        background: none;
+        font: inherit;
+        text-align: center;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        position: relative;
+        z-index: 1;
+        cursor: pointer;
+        transition: color 0.25s ease, transform 0.25s ease;
+      }
+      .checkout-progress button:disabled {
+        cursor: default;
+        opacity: 0.76;
+      }
+      .checkout-progress button:not(:disabled):hover {
+        color: var(--green-dark);
+        transform: translateY(-1px);
+      }
+      .checkout-progress button:focus-visible {
+        outline: 2px solid var(--gold);
+        outline-offset: 4px;
+        border-radius: 4px;
+      }
+      .checkout-progress button::before {
+        content: attr(data-step-number);
+        position: absolute;
+        top: 0;
         left: 50%;
-        width: 0;
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        border: 1px solid var(--line);
+        background: var(--paper);
+        color: var(--muted);
+        box-shadow: 0 2px 7px rgba(23, 22, 20, 0.08);
+        font-size: 10px;
+        letter-spacing: 0;
+        transition: background 0.3s, border-color 0.3s, color 0.3s, box-shadow 0.3s;
       }
       .checkout-progress .current {
-        color: var(--green);
+        color: var(--ink);
       }
       .checkout-progress .current::before {
         background: var(--green);
         border-color: var(--green);
+        color: #fff;
+        box-shadow: 0 0 0 4px rgba(40, 84, 71, 0.14), 0 4px 12px rgba(40, 84, 71, 0.22);
         animation: pulseDot 1.8s ease-out infinite;
       }
       .checkout-progress .done {
-        color: var(--green-dark);
+        color: var(--ink);
       }
       .checkout-progress .done::before {
+        content: "✓";
         background: var(--green);
         border-color: var(--green);
-      }
-      .checkout-progress .done + span::after,
-      .checkout-progress .current + span::after {
-        background: linear-gradient(90deg, var(--green), var(--line));
-      }
-      .checkout-progress .done + span::after {
-        background: var(--green);
+        color: #fff;
       }
       .shipping-meter {
         border: 1px solid var(--line);
@@ -859,8 +887,10 @@
           max-width: 100%;
           padding: 0 5%;
         }
-        .checkout-progress span {
+        .checkout-progress button {
           font-size: 9.5px;
+          letter-spacing: 0.01em;
+          padding-inline: 1px;
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -894,9 +924,10 @@
         <h1>Secure checkout</h1>
         <p>Complete your details to review your order.</p>
       </div>
-      <div class="checkout-progress reveal d1" aria-label="Checkout steps">
-        <span class="current">1 · Delivery</span><span>2 · Payment</span
-        ><span>3 · Confirmation</span>
+      <div class="checkout-progress reveal d1" role="group" aria-label="Checkout steps">
+        <button class="current" type="button" data-checkout-step data-step-number="1" aria-current="step">Delivery</button>
+        <button type="button" data-checkout-step data-step-number="2" disabled>Payment</button>
+        <button type="button" data-checkout-step data-step-number="3" disabled>Confirmation</button>
       </div>
       <div class="checkout-layout">
         <form class="checkout-form reveal d2" id="checkout-form" novalidate>
@@ -1231,6 +1262,12 @@
         const paymentBlock = document.getElementById("payment-block");
         const checkoutForm = document.getElementById("checkout-form");
         const paymentForm = document.getElementById("payment-form");
+        try {
+          const user = JSON.parse(localStorage.getItem("forma-user") || "null");
+          if (user?.email) checkoutForm.email.value = user.email;
+        } catch (e) {
+          /* ignore */
+        }
 
         // Expandable order summaries
         ["summary-toggle", "payment-summary-toggle"].forEach((id) => {
@@ -1253,14 +1290,34 @@
         }
 
         function setStep(index) {
+          const progress = document.querySelector(".checkout-progress");
+          progress.style.setProperty("--step-line-fill", `${index * 33.3333}%`);
           document
-            .querySelectorAll(".checkout-progress span")
-            .forEach((s, i) => {
-              s.classList.remove("current", "done");
-              if (i < index) s.classList.add("done");
-              if (i === index) s.classList.add("current");
+            .querySelectorAll("[data-checkout-step]")
+            .forEach((step, i) => {
+              step.classList.remove("current", "done");
+              if (i < index) step.classList.add("done");
+              if (i === index) {
+                step.classList.add("current");
+                step.setAttribute("aria-current", "step");
+              } else {
+                step.removeAttribute("aria-current");
+              }
+              step.disabled = i > index;
             });
         }
+        document.querySelectorAll("[data-checkout-step]").forEach((step, index) => {
+          step.onclick = () => {
+            const currentStep = [...document.querySelectorAll("[data-checkout-step]")]
+              .findIndex((item) => item.classList.contains("current"));
+            if (index >= currentStep) return;
+            checkoutForm.style.display = index === 0 ? "" : "none";
+            paymentBlock.style.display = index === 1 ? "" : "none";
+            setStep(index);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          };
+        });
+        setStep(0);
 
         checkoutForm.addEventListener("submit", function (event) {
           event.preventDefault();
@@ -1274,7 +1331,7 @@
           }
         });
         document.getElementById("checkout-back").onclick = function () {
-          window.location.href = "index.html";
+          window.location.href = "index.html#bag";
         };
         document.getElementById("payment-back").onclick = function () {
           paymentBlock.style.display = "none";
@@ -1319,6 +1376,9 @@
             currency(order.total);
           document.getElementById("confirm-overlay").hidden = false;
           setStep(2);
+          document.querySelectorAll("[data-checkout-step]").forEach((step) => {
+            step.disabled = true;
+          });
           launchConfetti();
           document.getElementById("confirm-continue").onclick = function () {
             window.location.href = "index.html";
