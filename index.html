@@ -40,7 +40,6 @@
         scroll-behavior: smooth;
       }
       body {
-        margin: 0;
         background: var(--paper);
         color: var(--ink);
         font-family: var(--sans);
@@ -4581,6 +4580,50 @@
       .coupon-grid {
         display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px;
       }
+      .checkin-panel {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(260px, .9fr);
+        gap: 30px;
+        align-items: stretch;
+        padding: 28px 0;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+      }
+      .checkin-main { display: flex; flex-direction: column; align-items: flex-start; }
+      .checkin-streak { margin: 4px 0 8px; font: 800 34px var(--head); color: var(--green-dark); }
+      .checkin-copy, .checkin-feedback { max-width: 520px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+      .checkin-feedback { min-height: 21px; margin: 10px 0 0; }
+      .checkin-live-reward {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 8px;
+        min-height: 190px;
+        padding: 22px 24px;
+        border-left: 3px solid var(--gold);
+        background: var(--surface);
+      }
+      .checkin-live-reward strong { font: 800 21px var(--head); color: var(--green-dark); }
+      .checkin-live-reward p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+      .checkin-reward-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+        gap: 10px;
+      }
+      .checkin-reward-day {
+        min-height: 118px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 9px;
+        border: 1px solid var(--line);
+        background: var(--paper);
+      }
+      .checkin-reward-day.next { border-color: var(--gold); background: #f4f0e5; }
+      .checkin-reward-day.used { opacity: .58; }
+      .checkin-reward-day b { font: 700 13px var(--head); }
+      .checkin-reward-day span { color: var(--muted); font-size: 10px; }
       .coupon-card {
         position: relative; background: var(--paper); border: 1px solid var(--line);
         border-radius: var(--radius-md); padding: 20px 22px; display: flex; flex-direction: column; gap: 8px;
@@ -4739,6 +4782,8 @@
       .help-contact-actions { display: flex; gap: 14px; align-items: center; }
       @media (max-width: 860px) {
         .refer-card { grid-template-columns: 1fr; padding: 24px; }
+        .checkin-panel { grid-template-columns: 1fr; }
+        .checkin-live-reward { min-height: 150px; }
         .coupon-hero { flex-direction: column; align-items: flex-start; }
       }
       /* A nav dropdown is open — keep the mega panel from colliding with it */
@@ -5013,6 +5058,7 @@
             <div class="profile-menu-heading">Account &amp; service</div>
             <a href="#account">Your dashboard</a>
             <a href="#coupons">Coupons &amp; offers</a>
+            <a href="#checkin">Daily check-in</a>
             <a href="#refer">Refer &amp; earn</a>
             <a href="#track">Track your order</a>
             <a href="#help">Help center</a>
@@ -5454,20 +5500,16 @@
       <section class="page" id="coupons-page" aria-labelledby="coupons-title">
         <div class="shop-heading">
           <div class="eyebrow">Coupons &amp; offers</div>
-          <h1 id="coupons-title">Save a little more, every day.</h1>
-          <p>Clip today's offers before the countdown ends; claimed coupons expire at local midnight.</p>
+          <h1 id="coupons-title">Your daily check-in rewards.</h1>
+          <p>Check in once each day to unlock a coupon. Every reward has its own use window and can only be redeemed once.</p>
         </div>
         <div class="section" style="padding-top:10px">
           <div class="coupon-hero">
             <div class="coupon-hero-copy">
-              <div class="eyebrow" style="color:#fff;opacity:.75">Limited time</div>
-              <h2>Extra 8% off your first order</h2>
-              <p>Use code <b class="coupon-code">FORMA8</b> at checkout — or clip it and we’ll apply it for you.</p>
-              <div class="coupon-hero-expiry" aria-label="Today's coupons expire at local midnight">
-                <span>Today’s offers expire in</span>
-                <time data-coupon-countdown>--:--:--</time>
-              </div>
-              <button class="button coupon-claim" type="button" data-code="FORMA8" style="align-self:flex-start">Claim coupon</button>
+              <div class="eyebrow" style="color:#fff;opacity:.75">Daily reward</div>
+              <h2>Check in. Unlock a little extra.</h2>
+              <p>Build your daily streak and receive one fresh reward coupon each day.</p>
+              <a class="button" href="#checkin" style="align-self:flex-start">Go to daily check-in</a>
             </div>
             <div class="coupon-hero-art" aria-hidden="true">%</div>
           </div>
@@ -5478,6 +5520,30 @@
             <p id="claimed-empty">You haven’t clipped any coupons yet. Claim one above and it will appear here.</p>
           </div>
           <div class="coupon-grid claimed" id="claimed-coupons"></div>
+        </div>
+      </section>
+      <section class="page" id="checkin-page" aria-labelledby="checkin-title">
+        <div class="shop-heading">
+          <div class="eyebrow">Daily rewards</div>
+          <h1 id="checkin-title">A little reward for showing up.</h1>
+          <p>Check in once each local day to unlock a coupon. Keep your streak going to reveal the full reward lineup.</p>
+        </div>
+        <div class="section" style="padding-top:10px">
+          <div class="checkin-panel">
+            <div class="checkin-main">
+              <div class="eyebrow">Your streak</div>
+              <strong class="checkin-streak" id="checkin-streak">0 days</strong>
+              <p class="checkin-copy" id="checkin-copy">One check-in each day earns a new coupon. Miss a day and your streak starts over.</p>
+              <button class="button" type="button" id="daily-checkin-button">Check in today</button>
+              <p class="checkin-feedback" id="checkin-feedback" aria-live="polite"></p>
+            </div>
+            <div class="checkin-live-reward" id="checkin-live-reward" aria-live="polite"></div>
+          </div>
+          <div class="shop-heading" style="margin-top:34px">
+            <div class="eyebrow">The reward trail</div>
+            <h2 class="section-title" style="font-size:24px">Six days of surprises</h2>
+          </div>
+          <div class="checkin-reward-grid" id="checkin-reward-grid"></div>
         </div>
       </section>
       <section class="page" id="refer-page" aria-labelledby="refer-title">
@@ -7444,6 +7510,10 @@
           document.getElementById("coupons-page").classList.add("active");
           renderCoupons();
           startCouponCountdown();
+        } else if (hash === "#checkin") {
+          document.getElementById("checkin-page").classList.add("active");
+          renderCheckin();
+          startCouponCountdown();
         } else if (hash === "#refer") {
           document.getElementById("refer-page").classList.add("active");
           renderRefer();
@@ -7777,60 +7847,116 @@
       document.getElementById("bag-page-checkout").onclick = checkoutFromBag;
       /* ── Coupons & offers ── */
       const COUPONS = [
-        { code: "FORMA8", value: "8% OFF", title: "First order discount", meta: "New customers · Min spend $30 · Today only", min: 30, eligibleItems: "Any item", eligibleProductIds: null, discountType: "percent", discount: 8 },
-        { code: "SHIPFREE", value: "FREE SHIP", title: "Free delivery, any order", meta: "No minimum spend · All regions · Today only", min: 0, eligibleItems: "Any item", eligibleProductIds: null, discountType: "shipping", discount: 0 },
-        { code: "TECH15", value: "15% OFF", title: "Tech & gadgets edit", meta: "Tech category · Min spend $50 · Today only", min: 50, eligibleItems: "MagPower 15, DigiLine cable, Platinum card, PowerFlow B11, Watch 6 Pro, Falcon router or SpaceBuds N", eligibleProductIds: [1, 3, 4, 5, 6, 7, 8], discountType: "percent", discount: 15 },
-        { code: "HOME10", value: "$10 OFF", title: "Home & living treat", meta: "Home category · Min spend $60 · Today only", min: 60, eligibleItems: "SmartHumidifier Aura or Sculptural Everyday Vase", eligibleProductIds: [2, 18], discountType: "fixed", discount: 10 },
-        { code: "BACK20", value: "20% OFF", title: "Flash bonus", meta: "Everything · Min spend $80 · Today only", min: 80, eligibleItems: "Any item", eligibleProductIds: null, discountType: "percent", discount: 20 },
-        { code: "REFER10", value: "$10 OFF", title: "Friend referral reward", meta: "Referral reward · Claim today", min: 40, eligibleItems: "Any item on a referred first order", eligibleProductIds: null, discountType: "fixed", discount: 10 },
+        { code: "FORMA8", value: "8% OFF", title: "First order discount", meta: "New customers · Min spend $30", min: 30, eligibleItems: "Any item", eligibleProductIds: null, discountType: "percent", discount: 8, durationHours: 2 },
+        { code: "SHIPFREE", value: "FREE SHIP", title: "Free delivery, any order", meta: "No minimum spend · All regions", min: 0, eligibleItems: "Any item", eligibleProductIds: null, discountType: "shipping", discount: 0, durationHours: 3 },
+        { code: "TECH15", value: "15% OFF", title: "Tech & gadgets edit", meta: "Tech category · Min spend $50", min: 50, eligibleItems: "MagPower 15, DigiLine cable, Platinum card, PowerFlow B11, Watch 6 Pro, Falcon router or SpaceBuds N", eligibleProductIds: [1, 3, 4, 5, 6, 7, 8], discountType: "percent", discount: 15, durationHours: 4 },
+        { code: "HOME10", value: "$10 OFF", title: "Home & living treat", meta: "Home category · Min spend $60", min: 60, eligibleItems: "SmartHumidifier Aura or Sculptural Everyday Vase", eligibleProductIds: [2, 18], discountType: "fixed", discount: 10, durationHours: 6 },
+        { code: "BACK20", value: "20% OFF", title: "Flash bonus", meta: "Everything · Min spend $80", min: 80, eligibleItems: "Any item", eligibleProductIds: null, discountType: "percent", discount: 20, durationHours: 8 },
+        { code: "REFER10", value: "$10 OFF", title: "Friend referral reward", meta: "Referral reward · Min spend $40", min: 40, eligibleItems: "Any item on a referred first order", eligibleProductIds: null, discountType: "fixed", discount: 10, durationHours: 12 },
       ];
       function couponDayKey(date = new Date()) {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+      }
+      function readUsedCoupons() {
+        try {
+          const used = JSON.parse(localStorage.getItem("forma-used-coupons") || "[]");
+          return Array.isArray(used) ? used : [];
+        } catch {
+          return [];
+        }
       }
       let activeCouponDay = couponDayKey();
       let couponCountdownTimer;
       function readClaimed() {
         try {
           const saved = JSON.parse(localStorage.getItem("forma-coupons") || "null");
-          if (saved?.version === 3 && saved.day === couponDayKey() && saved.code) {
-            return [saved.code];
+          if (![3, 4].includes(saved?.version) || saved.day !== couponDayKey() || !saved.code) {
+            if (saved?.version === 2 && saved.day === couponDayKey() && saved.codes?.length) {
+              const legacyCode = saved.codes[0];
+              return readUsedCoupons().includes(legacyCode) ? [] : [legacyCode];
+            }
+            return [];
           }
-          if (saved?.version === 2 && saved.day === couponDayKey() && saved.codes?.length) {
-            const firstClaim = saved.codes[0];
-            saveClaimed(firstClaim);
-            return [firstClaim];
-          }
-          return [];
+          const expiresAt = saved.expiresAt ? Date.parse(saved.expiresAt) : new Date().setHours(24, 0, 0, 0);
+          return expiresAt > Date.now() && !readUsedCoupons().includes(saved.code) ? [saved.code] : [];
         } catch {
           return [];
         }
       }
-      function saveClaimed(code) {
+      function readCheckinState() {
+        try {
+          const state = JSON.parse(localStorage.getItem("forma-checkins") || "null");
+          return state && typeof state === "object" && !Array.isArray(state)
+            ? { lastDay: String(state.lastDay || ""), streak: Math.max(0, Number(state.streak) || 0) }
+            : { lastDay: "", streak: 0 };
+        } catch {
+          return { lastDay: "", streak: 0 };
+        }
+      }
+      function dayDistance(from, to) {
+        const [fromYear, fromMonth, fromDay] = from.split("-").map(Number);
+        const [toYear, toMonth, toDay] = to.split("-").map(Number);
+        return (Date.UTC(toYear, toMonth - 1, toDay) - Date.UTC(fromYear, fromMonth - 1, fromDay)) / 86400000;
+      }
+      function rewardForStreak(streak, used = readUsedCoupons()) {
+        if (used.length >= COUPONS.length) return null;
+        const start = Math.max(0, streak - 1) % COUPONS.length;
+        for (let offset = 0; offset < COUPONS.length; offset++) {
+          const offer = COUPONS[(start + offset) % COUPONS.length];
+          if (!used.includes(offer.code)) return offer;
+        }
+        return null;
+      }
+      function saveClaimed(code, streak) {
         try {
           const offer = COUPONS.find((coupon) => coupon.code === code);
-          if (!offer) return;
-          localStorage.setItem("forma-coupons", JSON.stringify({ version: 3, day: couponDayKey(), code, offer }));
-        } catch {}
+          if (!offer) return false;
+          const claimedAt = new Date();
+          const expiresAt = new Date(claimedAt.getTime() + offer.durationHours * 60 * 60 * 1000);
+          localStorage.setItem("forma-coupons", JSON.stringify({ version: 4, day: couponDayKey(), code, offer, streak, claimedAt: claimedAt.toISOString(), expiresAt: expiresAt.toISOString() }));
+          return true;
+        } catch {
+          return false;
+        }
+      }
+      function readActiveCoupon() {
+        try {
+          const saved = JSON.parse(localStorage.getItem("forma-coupons") || "null");
+          const code = saved?.code || saved?.codes?.[0];
+          if (saved?.day !== couponDayKey() || !code || readUsedCoupons().includes(code)) return null;
+          const offer = saved.version === 4
+            ? saved.offer
+            : saved.version === 3
+              ? saved.offer
+              : saved.version === 2
+                ? COUPONS.find((coupon) => coupon.code === saved.codes?.[0])
+                : null;
+          const expiresAt = saved.expiresAt ? Date.parse(saved.expiresAt) : new Date().setHours(24, 0, 0, 0);
+          return offer && expiresAt > Date.now()
+            ? { ...offer, code, streak: saved.streak || readCheckinState().streak || 1, expiresAt: new Date(expiresAt).toISOString() }
+            : null;
+        } catch {
+          return null;
+        }
       }
       function updateCouponCountdown() {
         const now = new Date();
-        const expiry = new Date(now);
-        expiry.setHours(24, 0, 0, 0);
-        const secondsLeft = Math.max(0, Math.floor((expiry - now) / 1000));
-        const hours = Math.floor(secondsLeft / 3600);
-        const minutes = Math.floor((secondsLeft % 3600) / 60);
-        const seconds = secondsLeft % 60;
-        const countdown = [hours, minutes, seconds]
-          .map((part) => String(part).padStart(2, "0"))
-          .join(":");
-        document.querySelectorAll("[data-coupon-countdown]").forEach((timer) => {
-          timer.textContent = countdown;
+        document.querySelectorAll("[data-active-coupon-countdown]").forEach((timer) => {
+          const expiry = new Date(timer.dataset.expiresAt);
+          const secondsLeft = Math.max(0, Math.floor((expiry - new Date()) / 1000));
+          const hours = Math.floor(secondsLeft / 3600);
+          const minutes = Math.floor((secondsLeft % 3600) / 60);
+          const seconds = secondsLeft % 60;
+          timer.textContent = [hours, minutes, seconds]
+            .map((part) => String(part).padStart(2, "0"))
+            .join(":");
           timer.dateTime = expiry.toISOString();
         });
         const today = couponDayKey(now);
         if (today !== activeCouponDay) {
           activeCouponDay = today;
           renderCoupons();
+          renderCheckin();
         }
       }
       function startCouponCountdown() {
@@ -7839,60 +7965,118 @@
         updateCouponCountdown();
         couponCountdownTimer = setInterval(updateCouponCountdown, 1000);
       }
-      function claimCoupon(code) {
-        const claimed = readClaimed();
-        if (claimed.length) {
-          toast(claimed.includes(code) ? "You already claimed today's coupon." : "Only one coupon can be claimed per day.");
+      function checkInToday() {
+        const today = couponDayKey();
+        const state = readCheckinState();
+        if (state.lastDay === today) {
+          toast("You already checked in today. Come back tomorrow for another reward.");
           return;
         }
-        saveClaimed(code);
+        const streak = state.lastDay && dayDistance(state.lastDay, today) === 1
+          ? state.streak + 1
+          : 1;
+        const offer = rewardForStreak(streak);
+        if (!offer) {
+          toast("You have redeemed every coupon reward. Thanks for checking in!");
+          renderCheckin();
+          return;
+        }
+        try {
+          localStorage.setItem("forma-checkins", JSON.stringify({ lastDay: today, streak }));
+        } catch {
+          toast("Check-in could not be saved. Please try again.");
+          return;
+        }
+        if (!saveClaimed(offer.code, streak)) {
+          toast("Your reward could not be saved. Please try again.");
+          return;
+        }
+        renderCheckin();
         renderCoupons();
-        toast(`Coupon ${code} clipped — valid until midnight.`);
+        toast(`Day ${streak} reward unlocked: ${offer.code} is yours for ${offer.durationHours} hours.`);
+      }
+      function renderCheckin() {
+        let state = readCheckinState();
+        const today = couponDayKey();
+        const active = readActiveCoupon();
+        if (active && state.lastDay !== today) {
+          state = { lastDay: today, streak: active.streak || 1 };
+          try {
+            localStorage.setItem("forma-checkins", JSON.stringify(state));
+          } catch {}
+        }
+        const checkedIn = state.lastDay === today;
+        const nextStreak = state.lastDay && dayDistance(state.lastDay, today) === 1
+          ? state.streak + 1
+          : checkedIn ? state.streak : 1;
+        const preview = checkedIn ? null : rewardForStreak(nextStreak);
+        const used = readUsedCoupons();
+        const streakDisplay = checkedIn || (state.lastDay && dayDistance(state.lastDay, today) === 1)
+          ? state.streak
+          : 0;
+        document.getElementById("checkin-streak").textContent = `${streakDisplay} ${streakDisplay === 1 ? "day" : "days"}`;
+        document.getElementById("checkin-copy").textContent = checkedIn
+          ? "Today’s check-in is complete. Your next reward arrives tomorrow."
+          : "Check in once today to unlock your next reward. Miss a day and your streak starts over.";
+        const checkinButton = document.getElementById("daily-checkin-button");
+        checkinButton.disabled = checkedIn || !preview;
+        checkinButton.textContent = checkedIn ? "Checked in today" : preview ? "Check in today" : "All rewards redeemed";
+        checkinButton.onclick = checkInToday;
+        document.getElementById("checkin-feedback").textContent = active
+          ? `${active.code} is ready to use at checkout.`
+          : checkedIn
+            ? "Your reward has expired or has already been redeemed."
+            : preview
+              ? `Today's check-in unlocks ${preview.code} for ${preview.durationHours} hours.`
+              : "Every one-time reward has been redeemed.";
+        const liveReward = document.getElementById("checkin-live-reward");
+        if (active) {
+          liveReward.innerHTML = `<span class="eyebrow">Reward unlocked · day ${active.streak}</span><strong>${active.code} · ${active.value}</strong><p>${escapeHTML(active.title)} · Use within <time data-active-coupon-countdown data-expires-at="${active.expiresAt}"></time></p>`;
+        } else if (preview) {
+          liveReward.innerHTML = `<span class="eyebrow">Your next check-in reward</span><strong>${preview.code} · ${preview.value}</strong><p>${escapeHTML(preview.title)} · Available for ${preview.durationHours} hours after check-in.</p>`;
+        } else {
+          liveReward.innerHTML = '<span class="eyebrow">Reward wallet</span><strong>All rewards redeemed</strong><p>You have used every one-time coupon in this reward cycle.</p>';
+        }
+        document.getElementById("checkin-reward-grid").innerHTML = COUPONS.map((offer, index) => {
+          const isUsed = used.includes(offer.code);
+          const isActive = active?.code === offer.code;
+          const isNext = !checkedIn && preview?.code === offer.code;
+          const status = isUsed ? "Redeemed" : isActive ? "Unlocked" : isNext ? "Next reward" : "Check in to unlock";
+          return `<div class="checkin-reward-day${isUsed ? " used" : isNext ? " next" : ""}"><span>DAY ${index + 1} REWARD · ${offer.durationHours}-HOUR WINDOW</span><b>${offer.value}</b><span>${status}</span></div>`;
+        }).join("");
       }
       function renderCoupons() {
         const claimed = readClaimed();
-        const heroClaim = document.querySelector(".coupon-claim");
-        if (heroClaim) {
-          const isClaimed = claimed.includes(heroClaim.dataset.code);
-          heroClaim.disabled = claimed.length > 0;
-          heroClaim.textContent = isClaimed
-            ? "Claimed today ✓"
-            : claimed.length ? "One coupon claimed today" : "Claim coupon";
-          heroClaim.onclick = () => claimCoupon(heroClaim.dataset.code);
-        }
+        const usedCoupons = readUsedCoupons();
+        const activeCoupon = readActiveCoupon();
         document.getElementById("coupon-grid").innerHTML = COUPONS.map((c) => {
           const isClaimed = claimed.includes(c.code);
-          const claimDisabled = claimed.length > 0;
+          const isUsed = usedCoupons.includes(c.code);
+          const isActive = activeCoupon?.code === c.code;
           return `
-          <article class="coupon-card ${isClaimed ? "claimed" : ""}">
+          <article class="coupon-card ${isClaimed || isUsed ? "claimed" : ""}">
             <span class="coupon-value">${c.value}</span>
             <h3>${escapeHTML(c.title)}</h3>
             <span class="coupon-meta">${escapeHTML(c.meta)}</span>
             <span class="coupon-requirement">Required items: ${escapeHTML(c.eligibleItems)}${c.min ? ` · Minimum ${currency(c.min)}` : ""}</span>
-            <span class="coupon-card-expiry">Expires in <time data-coupon-countdown>--:--:--</time></span>
+            <span class="coupon-card-expiry">${isUsed ? "Redeemed once" : isActive ? `Expires in <time data-active-coupon-countdown data-expires-at="${activeCoupon.expiresAt}"></time>` : `${c.durationHours}-hour window after check-in`}</span>
             <code class="coupon-code">${c.code}</code>
-            <button class="button coupon-btn" type="button" data-code="${c.code}" ${claimDisabled ? "disabled" : ""}
-              style="${claimDisabled ? "background:var(--surface);color:var(--muted)" : ""}">${isClaimed ? "Claimed today ✓" : claimDisabled ? "One coupon per day" : "Claim coupon"}</button>
+            ${isActive ? '<span class="coupon-meta">Unlocked from your daily check-in</span>' : isUsed ? '<span class="coupon-meta">Already used on an order</span>' : '<a class="button coupon-btn" href="#checkin">Check in to unlock</a>'}
           </article>`;
         }).join("");
-        document.querySelectorAll("#coupon-grid .coupon-btn").forEach((btn) => {
-          btn.onclick = () => {
-            claimCoupon(btn.dataset.code);
-          };
-        });
         const claimedBox = document.getElementById("claimed-coupons");
-        claimedBox.innerHTML = claimed.length
-          ? COUPONS.filter((c) => claimed.includes(c.code)).map((c) => `
+        claimedBox.innerHTML = activeCoupon
+          ? COUPONS.filter((c) => c.code === activeCoupon.code).map((c) => `
             <article class="coupon-card claimed">
               <span class="coupon-value">${c.value}</span>
               <h3>${escapeHTML(c.title)}</h3>
               <span class="coupon-requirement">Required items: ${escapeHTML(c.eligibleItems)}${c.min ? ` · Minimum ${currency(c.min)}` : ""}</span>
               <code class="coupon-code">${c.code}</code>
-              <span class="coupon-meta">Claimed today · valid until midnight.</span>
-              <span class="coupon-card-expiry">Expires in <time data-coupon-countdown>--:--:--</time></span>
+              <span class="coupon-meta">Daily check-in reward · one use only.</span>
+              <span class="coupon-card-expiry">Expires in <time data-active-coupon-countdown data-expires-at="${activeCoupon.expiresAt}"></time></span>
             </article>`).join("")
-          : '<p class="empty-state" style="grid-column:1/-1">Nothing clipped yet — grab one above.</p>';
-        document.getElementById("claimed-empty").hidden = claimed.length > 0;
+          : '<p class="empty-state" style="grid-column:1/-1">No active reward. Check in to unlock today’s coupon.</p>';
+        document.getElementById("claimed-empty").hidden = Boolean(activeCoupon);
       }
       /* ── Refer & earn ── */
       function renderRefer() {

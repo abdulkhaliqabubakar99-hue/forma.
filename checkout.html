@@ -1239,6 +1239,14 @@
         function couponDayKey(date = new Date()) {
           return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
         }
+        function readUsedCoupons() {
+          try {
+            const used = JSON.parse(localStorage.getItem("forma-used-coupons") || "[]");
+            return Array.isArray(used) ? used : [];
+          } catch (e) {
+            return [];
+          }
+        }
         const LEGACY_COUPON_RULES = {
           FORMA8: { code: "FORMA8", value: "8% OFF", title: "First order discount", min: 30, eligibleItems: "Any item", eligibleProductIds: null, discountType: "percent", discount: 8 },
           SHIPFREE: { code: "SHIPFREE", value: "FREE SHIP", title: "Free delivery, any order", min: 0, eligibleItems: "Any item", eligibleProductIds: null, discountType: "shipping", discount: 0 },
@@ -1251,18 +1259,58 @@
           try {
             const saved = JSON.parse(localStorage.getItem("forma-coupons") || "null");
             if (saved?.day !== couponDayKey()) return null;
-            if (saved.version === 3 && saved.offer?.code === saved.code) return saved.offer;
+            if (saved.version === 4 && saved.offer?.code === saved.code && Date.parse(saved.expiresAt) > Date.now() && !readUsedCoupons().includes(saved.code)) return saved.offer;
+            if (saved.version === 3 && saved.offer?.code === saved.code && !readUsedCoupons().includes(saved.code)) return saved.offer;
             if (saved.version === 2 && Array.isArray(saved.codes)) {
-              return LEGACY_COUPON_RULES[saved.codes[0]] || null;
+              const code = saved.codes[0];
+              return readUsedCoupons().includes(code) ? null : LEGACY_COUPON_RULES[code] || null;
             }
           } catch (e) {
             return null;
           }
           return null;
         }
+        function dailyCouponWasUsed() {
+          try {
+            const saved = JSON.parse(localStorage.getItem("forma-coupons") || "null");
+            if (saved?.day !== couponDayKey()) return false;
+            const codes = [3, 4].includes(saved.version)
+              ? [saved.code]
+              : saved.version === 2 && Array.isArray(saved.codes)
+                ? saved.codes
+                : [];
+            return codes.some((code) => readUsedCoupons().includes(code));
+          } catch (e) {
+            return false;
+          }
+        }
+        function dailyCouponExpired() {
+          try {
+            const saved = JSON.parse(localStorage.getItem("forma-coupons") || "null");
+            if (saved?.day !== couponDayKey()) return false;
+            const expiresAt = saved.version === 4 && saved.expiresAt
+              ? Date.parse(saved.expiresAt)
+              : new Date().setHours(24, 0, 0, 0);
+            return expiresAt <= Date.now() && !readUsedCoupons().includes(saved.code);
+          } catch (e) {
+            return false;
+          }
+        }
         function saveCart() {
           try {
             localStorage.setItem("forma-cart", JSON.stringify(cart));
+          } catch (e) {
+            /* ignore */
+          }
+        }
+        function markCouponUsed(code) {
+          if (!code) return;
+          try {
+            const used = readUsedCoupons();
+            if (!used.includes(code)) {
+              used.push(code);
+              localStorage.setItem("forma-used-coupons", JSON.stringify(used));
+            }
           } catch (e) {
             /* ignore */
           }
@@ -1296,7 +1344,11 @@
               applied: false,
               discount: 0,
               shipping: baseShipping,
-              feedback: offer
+              feedback: dailyCouponWasUsed()
+                ? "Your claimed coupon has already been used."
+                : dailyCouponExpired()
+                  ? "Your coupon's reward window has expired. Continue without it or check in tomorrow."
+                : offer
                 ? `Your claimed ${offer.code} coupon is ready. Select it to check your order.`
                 : "Claim one coupon per day from Coupons; it expires at midnight.",
             };
@@ -1367,7 +1419,13 @@
           couponSelect.innerHTML = "";
           const noCouponOption = document.createElement("option");
           noCouponOption.value = "";
-          noCouponOption.textContent = dailyCoupon ? "No coupon selected" : "No coupon claimed today";
+          noCouponOption.textContent = dailyCoupon
+            ? "No coupon selected"
+            : dailyCouponWasUsed()
+              ? "Today's coupon already used"
+              : dailyCouponExpired()
+                ? "Coupon reward window expired"
+              : "No coupon claimed today";
           couponSelect.append(noCouponOption);
           if (dailyCoupon) {
             const option = document.createElement("option");
@@ -1568,11 +1626,17 @@
             (total, item) => total + item.price * item.qty,
             0,
           );
-          const coupon = calculateCoupon(subtotal, shippingFor(subtotal));
+          let coupon = calculateCoupon(subtotal, shippingFor(subtotal));
           if (couponSelect.value && !coupon.applied) {
-            document.getElementById("coupon-feedback").textContent = coupon.feedback;
-            toast("Add the required items to use your selected coupon.");
-            return;
+            if (dailyCouponExpired()) {
+              couponSelect.value = "";
+              renderSummaries();
+              coupon = calculateCoupon(subtotal, shippingFor(subtotal));
+            } else {
+              document.getElementById("coupon-feedback").textContent = coupon.feedback;
+              toast("Add the required items to use your selected coupon.");
+              return;
+            }
           }
           const shipping = coupon.shipping;
           const total = Math.max(0, subtotal + shipping - coupon.discount);
@@ -1624,6 +1688,7 @@
           } catch (e) {
             /* ignore */
           }
+          if (coupon.applied) markCouponUsed(coupon.code);
           cart = [];
           saveCart();
         });
