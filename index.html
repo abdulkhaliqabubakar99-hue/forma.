@@ -4595,6 +4595,41 @@
       .coupon-card .coupon-value { font: 800 26px var(--head); color: var(--green); letter-spacing: -0.5px; }
       .coupon-card h3 { margin: 0; font: 700 15px var(--head); }
       .coupon-card .coupon-meta { font-size: 12px; color: var(--muted); }
+      .coupon-requirement {
+        color: var(--ink);
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+      .coupon-hero-expiry {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin: 0 0 17px;
+        color: rgba(248, 247, 242, 0.72);
+      }
+      .coupon-hero-expiry span {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .coupon-hero-expiry time {
+        color: #f0d7a3;
+        font: 700 16px var(--head);
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.05em;
+      }
+      .coupon-card-expiry {
+        color: var(--green-dark);
+        font-size: 10px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+      }
+      .coupon-card-expiry time {
+        margin-left: 4px;
+        letter-spacing: 0.04em;
+      }
       .coupon-card .coupon-code {
         font-family: ui-monospace, monospace; font-size: 13px; letter-spacing: .1em;
         background: var(--surface); border: 1px dashed var(--line); border-radius: 6px;
@@ -5420,7 +5455,7 @@
         <div class="shop-heading">
           <div class="eyebrow">Coupons &amp; offers</div>
           <h1 id="coupons-title">Save a little more, every day.</h1>
-          <p>Collect coupons, clip them to your account and watch them apply automatically at checkout.</p>
+          <p>Clip today's offers before the countdown ends; claimed coupons expire at local midnight.</p>
         </div>
         <div class="section" style="padding-top:10px">
           <div class="coupon-hero">
@@ -5428,6 +5463,10 @@
               <div class="eyebrow" style="color:#fff;opacity:.75">Limited time</div>
               <h2>Extra 8% off your first order</h2>
               <p>Use code <b class="coupon-code">FORMA8</b> at checkout — or clip it and we’ll apply it for you.</p>
+              <div class="coupon-hero-expiry" aria-label="Today's coupons expire at local midnight">
+                <span>Today’s offers expire in</span>
+                <time data-coupon-countdown>--:--:--</time>
+              </div>
               <button class="button coupon-claim" type="button" data-code="FORMA8" style="align-self:flex-start">Claim coupon</button>
             </div>
             <div class="coupon-hero-art" aria-hidden="true">%</div>
@@ -7411,6 +7450,7 @@
         } else if (hash === "#coupons") {
           document.getElementById("coupons-page").classList.add("active");
           renderCoupons();
+          startCouponCountdown();
         } else if (hash === "#refer") {
           document.getElementById("refer-page").classList.add("active");
           renderRefer();
@@ -7744,41 +7784,107 @@
       document.getElementById("bag-page-checkout").onclick = checkoutFromBag;
       /* ── Coupons & offers ── */
       const COUPONS = [
-        { code: "FORMA8", value: "8% OFF", title: "First order discount", meta: "New customers · Min spend $30 · Ends soon", min: 30 },
-        { code: "SHIPFREE", value: "FREE SHIP", title: "Free delivery, any order", meta: "No minimum spend · All regions", min: 0 },
-        { code: "TECH15", value: "15% OFF", title: "Tech & gadgets edit", meta: "Tech category · Min spend $50 · This week only", min: 50 },
-        { code: "HOME10", value: "$10 OFF", title: "Home & living treat", meta: "Home category · Min spend $60", min: 60 },
-        { code: "BACK20", value: "20% OFF", title: "Flash weekend bonus", meta: "Everything · Min spend $80 · Weekend only", min: 80 },
-        { code: "REFER10", value: "$10 OFF", title: "Friend referral reward", meta: "When a referral’s first order ships", min: 40 },
+        { code: "FORMA8", value: "8% OFF", title: "First order discount", meta: "New customers · Min spend $30 · Today only", min: 30, eligibleItems: "Any item", eligibleProductIds: null, discountType: "percent", discount: 8 },
+        { code: "SHIPFREE", value: "FREE SHIP", title: "Free delivery, any order", meta: "No minimum spend · All regions · Today only", min: 0, eligibleItems: "Any item", eligibleProductIds: null, discountType: "shipping", discount: 0 },
+        { code: "TECH15", value: "15% OFF", title: "Tech & gadgets edit", meta: "Tech category · Min spend $50 · Today only", min: 50, eligibleItems: "MagPower 15, DigiLine cable, Platinum card, PowerFlow B11, Watch 6 Pro, Falcon router or SpaceBuds N", eligibleProductIds: [1, 3, 4, 5, 6, 7, 8], discountType: "percent", discount: 15 },
+        { code: "HOME10", value: "$10 OFF", title: "Home & living treat", meta: "Home category · Min spend $60 · Today only", min: 60, eligibleItems: "SmartHumidifier Aura or Sculptural Everyday Vase", eligibleProductIds: [2, 18], discountType: "fixed", discount: 10 },
+        { code: "BACK20", value: "20% OFF", title: "Flash bonus", meta: "Everything · Min spend $80 · Today only", min: 80, eligibleItems: "Any item", eligibleProductIds: null, discountType: "percent", discount: 20 },
+        { code: "REFER10", value: "$10 OFF", title: "Friend referral reward", meta: "Referral reward · Claim today", min: 40, eligibleItems: "Any item on a referred first order", eligibleProductIds: null, discountType: "fixed", discount: 10 },
       ];
-      function readClaimed() {
-        try { return JSON.parse(localStorage.getItem("forma-coupons") || "[]"); } catch { return []; }
+      function couponDayKey(date = new Date()) {
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
       }
-      function saveClaimed(list) {
-        try { localStorage.setItem("forma-coupons", JSON.stringify(list)); } catch {}
+      let activeCouponDay = couponDayKey();
+      let couponCountdownTimer;
+      function readClaimed() {
+        try {
+          const saved = JSON.parse(localStorage.getItem("forma-coupons") || "null");
+          if (saved?.version === 3 && saved.day === couponDayKey() && saved.code) {
+            return [saved.code];
+          }
+          if (saved?.version === 2 && saved.day === couponDayKey() && saved.codes?.length) {
+            const firstClaim = saved.codes[0];
+            saveClaimed(firstClaim);
+            return [firstClaim];
+          }
+          return [];
+        } catch {
+          return [];
+        }
+      }
+      function saveClaimed(code) {
+        try {
+          const offer = COUPONS.find((coupon) => coupon.code === code);
+          if (!offer) return;
+          localStorage.setItem("forma-coupons", JSON.stringify({ version: 3, day: couponDayKey(), code, offer }));
+        } catch {}
+      }
+      function updateCouponCountdown() {
+        const now = new Date();
+        const expiry = new Date(now);
+        expiry.setHours(24, 0, 0, 0);
+        const secondsLeft = Math.max(0, Math.floor((expiry - now) / 1000));
+        const hours = Math.floor(secondsLeft / 3600);
+        const minutes = Math.floor((secondsLeft % 3600) / 60);
+        const seconds = secondsLeft % 60;
+        const countdown = [hours, minutes, seconds]
+          .map((part) => String(part).padStart(2, "0"))
+          .join(":");
+        document.querySelectorAll("[data-coupon-countdown]").forEach((timer) => {
+          timer.textContent = countdown;
+          timer.dateTime = expiry.toISOString();
+        });
+        const today = couponDayKey(now);
+        if (today !== activeCouponDay) {
+          activeCouponDay = today;
+          renderCoupons();
+        }
+      }
+      function startCouponCountdown() {
+        clearInterval(couponCountdownTimer);
+        activeCouponDay = couponDayKey();
+        updateCouponCountdown();
+        couponCountdownTimer = setInterval(updateCouponCountdown, 1000);
+      }
+      function claimCoupon(code) {
+        const claimed = readClaimed();
+        if (claimed.length) {
+          toast(claimed.includes(code) ? "You already claimed today's coupon." : "Only one coupon can be claimed per day.");
+          return;
+        }
+        saveClaimed(code);
+        renderCoupons();
+        toast(`Coupon ${code} clipped — valid until midnight.`);
       }
       function renderCoupons() {
         const claimed = readClaimed();
+        const heroClaim = document.querySelector(".coupon-claim");
+        if (heroClaim) {
+          const isClaimed = claimed.includes(heroClaim.dataset.code);
+          heroClaim.disabled = claimed.length > 0;
+          heroClaim.textContent = isClaimed
+            ? "Claimed today ✓"
+            : claimed.length ? "One coupon claimed today" : "Claim coupon";
+          heroClaim.onclick = () => claimCoupon(heroClaim.dataset.code);
+        }
         document.getElementById("coupon-grid").innerHTML = COUPONS.map((c) => {
           const isClaimed = claimed.includes(c.code);
+          const claimDisabled = claimed.length > 0;
           return `
           <article class="coupon-card ${isClaimed ? "claimed" : ""}">
             <span class="coupon-value">${c.value}</span>
             <h3>${escapeHTML(c.title)}</h3>
             <span class="coupon-meta">${escapeHTML(c.meta)}</span>
+            <span class="coupon-requirement">Required items: ${escapeHTML(c.eligibleItems)}${c.min ? ` · Minimum ${currency(c.min)}` : ""}</span>
+            <span class="coupon-card-expiry">Expires in <time data-coupon-countdown>--:--:--</time></span>
             <code class="coupon-code">${c.code}</code>
-            <button class="button coupon-btn" type="button" data-code="${c.code}" ${isClaimed ? "disabled" : ""}
-              style="${isClaimed ? "background:var(--surface);color:var(--muted)" : ""}">${isClaimed ? "Claimed ✓" : "Claim coupon"}</button>
+            <button class="button coupon-btn" type="button" data-code="${c.code}" ${claimDisabled ? "disabled" : ""}
+              style="${claimDisabled ? "background:var(--surface);color:var(--muted)" : ""}">${isClaimed ? "Claimed today ✓" : claimDisabled ? "One coupon per day" : "Claim coupon"}</button>
           </article>`;
         }).join("");
         document.querySelectorAll("#coupon-grid .coupon-btn").forEach((btn) => {
           btn.onclick = () => {
-            const claimed = readClaimed();
-            if (claimed.includes(btn.dataset.code)) return;
-            claimed.push(btn.dataset.code);
-            saveClaimed(claimed);
-            renderCoupons();
-            toast(`Coupon ${btn.dataset.code} clipped — applied at checkout.`);
+            claimCoupon(btn.dataset.code);
           };
         });
         const claimedBox = document.getElementById("claimed-coupons");
@@ -7787,8 +7893,10 @@
             <article class="coupon-card claimed">
               <span class="coupon-value">${c.value}</span>
               <h3>${escapeHTML(c.title)}</h3>
+              <span class="coupon-requirement">Required items: ${escapeHTML(c.eligibleItems)}${c.min ? ` · Minimum ${currency(c.min)}` : ""}</span>
               <code class="coupon-code">${c.code}</code>
-              <span class="coupon-meta">Ready — auto-applies at checkout.</span>
+              <span class="coupon-meta">Claimed today · valid until midnight.</span>
+              <span class="coupon-card-expiry">Expires in <time data-coupon-countdown>--:--:--</time></span>
             </article>`).join("")
           : '<p class="empty-state" style="grid-column:1/-1">Nothing clipped yet — grab one above.</p>';
         document.getElementById("claimed-empty").hidden = claimed.length > 0;
@@ -7855,7 +7963,7 @@
       const HELP_FAQ = [
         ["How long does delivery take?", "Standard delivery takes 2–5 business days. Orders over $100 ship free; otherwise a flat $6.90 applies."],
         ["What is your return policy?", "You can return anything within 30 days, unused and in its original packaging. Start a return from your account dashboard."],
-        ["How do coupons work?", "Clip any coupon on the Coupons page and it applies automatically at checkout. One coupon per order."],
+        ["How do coupons work?", "Claim an offer from the Coupons page before its countdown ends. Claims expire at local midnight and reset for the next day."],
         ["How does referring a friend work?", "Share your referral link from the Refer page. When your friend’s first order ships, you both get $10 in store credit."],
         ["Which payment methods do you accept?", "Visa, Mastercard, Verve, PayPal and M-Pesa. All demo payments in this store are simulated."],
         ["Is my data safe?", "This demo keeps accounts, orders and coupons in your own browser’s local storage — nothing leaves your device."],
